@@ -1,0 +1,72 @@
+{% extends '@ForciMenuBuilderClient/Menu/base.html.twig' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-9">
+            <div id="menuContainer" data-refresh="{{ path('forci_menu_builder_client_menu_nestable_refresh', {id: menu.id}) }}">
+                {% include '@ForciMenuBuilderClient/Menu/nestable/nestable.html.twig' %}
+            </div>
+        </div>
+        <div class="col-sm-3">
+            {% form_theme form '@ForciMenuBuilderClient/_shared/form/form_theme.html.twig' %}
+            {{ form_start(form) }}
+            {{ form_rest(form) }}
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    Save
+                </button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    function initNestable() {
+        $('.dd').nestable({
+            maxDepth: 5000
+        }).change(function() {
+            var order = $('.dd').nestable('serialize');
+            $.ajax({
+                url: '{{ path('forci_menu_builder_client_menu_nestable_update', {id: menu.id}) }}',
+                type: 'POST',
+                data: {
+                    order: order
+                },
+                dataType: 'json'
+            }).done(function(data) {
+                $.witter(data.witter);
+                {#$('#menuContainer').trigger('refresh');#}
+            });
+        });
+    }
+    $('#menuContainer').on('refreshed', function() {
+        initNestable();
+        $('.x-editable-text').editable();
+    });
+    initNestable();
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li>
+        Nestable
+    </li>
+    <li class="pull-right">
+        <a href="{{ path('forci_menu_builder_client_menu_item_choose_route', {id: menu.id}) }}" class="ajax-action">
+            <i class="fa fa-plus"></i>
+            Add Item
+        </a>
+    </li>
+    {% if not menu.isSystem %}
+        <li class="pull-right">
+            <a href="{{ path('forci_menu_builder_client_menu_remove', {id: menu.id}) }}"
+               data-confirm="Should Menu '{{ menu.name }}' be removed?">
+                <i class="fa fa-times"></i>
+                Remove Menu
+            </a>
+        </li>
+    {% endif %}
+{% endblock %}

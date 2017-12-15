@@ -1,0 +1,25 @@
+forci_menu_builder_client_menu_item_name_update:
+    path:        /{itemId}/update/name
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu/Item:updateItemName }
+
+forci_menu_builder_client_menu_item_choose_route:
+    path:        /add/choose-route/{parentId}
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu/Item:chooseRoute, parentId: null }
+    requirements:
+        id: \d+
+        parentId: \d+
+
+forci_menu_builder_client_menu_item_add:
+    path:        /add/{routeId}/{parentId}
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu/Item:addItem, parentId: null }
+    requirements:
+        id: \d+
+        routeId: \d+
+        parentId: \d+
+
+forci_menu_builder_client_menu_item_edit:
+    path:        /{itemId}/edit
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu/Item:editItem }
+    requirements:
+        id: \d+
+        itemId: \d+

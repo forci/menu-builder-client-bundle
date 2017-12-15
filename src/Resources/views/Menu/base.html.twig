@@ -1,0 +1,16 @@
+{% extends '@ForciMenuBuilderClient/layout.html.twig' %}
+
+{% block breadcrumb %}
+    <li>
+        <a href="{{ path('forci_menu_builder_client_menu_list') }}">
+            Menus
+        </a>
+    </li>
+    {% if menu is defined and menu.id %}
+        <li>
+            <a href="{{ path('forci_menu_builder_client_menu_sortable', {id: menu.id}) }}">
+                {{ menu.name }}
+            </a>
+        </li>
+    {% endif %}
+{% endblock %}

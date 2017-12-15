@@ -1,0 +1,31 @@
+{
+    "name": "forci/menu-builder-client-bundle",
+    "type": "symfony-bundle",
+    "description": "A client for the Menu Builder Bundle",
+    "keywords": ["wucdbm", "menu", "builder", "menu builder", "symfony2"],
+    "authors": [
+        {
+            "name": "Martin Kirilov",
+            "email": "wucdbm@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.3",
+        "symfony/symfony": "~3.0|4.0",
+        "wucdbm/quick-ui-bundle": "~0.2",
+        "forci/menu-builder-bundle": "dev-master"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.8",
+        "wucdbm/php-cs-fixers": "~0.2"
+    },
+    "autoload": {
+        "psr-4": { "Forci\\Bundle\\MenuBuilderClient\\": "src" }
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "minimum-stability": "dev",
+    "license": "GPL-3.0"
+}

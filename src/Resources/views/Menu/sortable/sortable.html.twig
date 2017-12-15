@@ -1,0 +1,16 @@
+{% if menu|menuTopLevelItems|length %}
+    <ol class="sortable-root {{ class }}">
+        {% for item in menu|menuTopLevelItems %}
+            {% include '@ForciMenuBuilderClient/Menu/sortable/sortable_item.html.twig' %}
+        {% endfor %}
+    </ol>
+{% else %}
+    <div class="alert alert-info">
+        <p>This menu does not have any items yet</p>
+        <br/>
+        <a href="{{ path('forci_menu_builder_client_menu_item_choose_route', {id: menu.id}) }}" class="btn btn-primary ajax-action">
+            <i class="fa fa-plus"></i>
+            Create your first
+        </a>
+    </div>
+{% endif %}

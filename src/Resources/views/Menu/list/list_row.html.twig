@@ -1,0 +1,49 @@
+<td>{{ menu.id }}</td>
+<td>
+    <a href="javascript:;" class="x-editable-text" data-type="text" data-pk="1"
+       data-url="{{ path('forci_menu_builder_client_menu_name_update', {id: menu.id}) }}"
+       data-placement="top" title="Set Menu Name">
+        {{ menu.name }}
+    </a>
+</td>
+<td>
+    {% if menu.isSystem %}
+        <span class="label label-info" rel="tooltip" title="This menu is system and you can not delete it">System</span>
+    {% else %}
+        <span class="label label-success" rel="tooltip" title="This menu is personal and can be deleted at any time">Personal</span>
+    {% endif %}
+</td>
+<td>{{ menu.items|length }}</td>
+<td>
+    <a href="{{ path('forci_menu_builder_client_menu_nestable', {id: menu.id}) }}" class="btn btn-default">
+        Nestable
+    </a>
+</td>
+<td>
+    <div class="btn-group">
+        <a href="{{ path('forci_menu_builder_client_menu_sortable', {id: menu.id}) }}" class="btn btn-primary">
+            Sortable
+        </a>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="{{ path('forci_menu_builder_client_menu_sortable', {id: menu.id, class: 'vertical-simple'}) }}">
+                    Simple
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('forci_menu_builder_client_menu_sortable', {id: menu.id, class: 'vertical-custom'}) }}">
+                    Custom
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('forci_menu_builder_client_menu_sortable', {id: menu.id, class: 'vertical'}) }}">
+                    Vertical
+                </a>
+            </li>
+        </ul>
+    </div>
+</td>

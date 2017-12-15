@@ -1,0 +1,55 @@
+forci_menu_builder_client_menu_list:
+    path:        /list
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu:list }
+
+forci_menu_builder_client_menu_list_row_refresh:
+    path:        /{id}/refresh/row
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu:refreshListRow }
+
+forci_menu_builder_client_menu_name_update:
+    path:        /{id}/update/name
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu:updateName }
+
+forci_menu_builder_client_menu_create:
+    path:        /create
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu:create }
+
+forci_menu_builder_client_menu_nestable:
+    path:        /{id}/nestable/sort
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu:nestable }
+
+forci_menu_builder_client_menu_nestable_refresh:
+    path:        /{id}/refresh/nestable
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu:refreshNestable }
+
+forci_menu_builder_client_menu_nestable_update:
+    path:        /{id}/nestable/update
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu:updateNestable }
+
+forci_menu_builder_client_menu_sortable:
+    path:        /{id}/sortable/{class}/sort
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu:sortable, class: 'vertical-simple' }
+    requirements:
+        class: 'vertical-simple|vertical-custom|vertical'
+
+forci_menu_builder_client_menu_sortable_refresh:
+    path:        /{id}/refresh/sortable
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu:refreshSortable }
+
+forci_menu_builder_client_menu_sortable_update:
+    path:        /{id}/sortable/update
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu:updateSortable }
+
+forci_menu_builder_client_menu_remove:
+    path:        /{id}/remove
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu:remove }
+    requirements:
+        id: \d+
+
+forci_menu_builder_client_menu_item:
+    resource: menu/item.yml
+    prefix: /{id}/items
+
+forci_menu_builder_client_menu_item_remove:
+    path:        /items/remove
+    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu:removeItem }
