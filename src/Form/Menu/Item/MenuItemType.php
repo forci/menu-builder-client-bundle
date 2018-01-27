@@ -13,8 +13,11 @@
 
 namespace Forci\Bundle\MenuBuilderClient\Form\Menu\Item;
 
+use Forci\Bundle\MenuBuilderBundle\Entity\MenuItem;
+use Forci\Bundle\MenuBuilderBundle\Entity\MenuItemParameter;
+use Forci\Bundle\MenuBuilderBundle\Entity\RouteParameter;
+use Forci\Bundle\MenuBuilderBundle\Entity\RouteParameterType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,10 +26,6 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Forci\Bundle\MenuBuilderBundle\Entity\MenuItem;
-use Forci\Bundle\MenuBuilderBundle\Entity\MenuItemParameter;
-use Forci\Bundle\MenuBuilderBundle\Entity\RouteParameter;
-use Forci\Bundle\MenuBuilderBundle\Entity\RouteParameterType;
 
 class MenuItemType extends AbstractType {
 
@@ -73,9 +72,9 @@ class MenuItemType extends AbstractType {
                 /** @var MenuItemParameter $menuParameter */
                 foreach ($item->getParameters() as $menuParameter) {
                     $parameter = $menuParameter->getParameter();
-                    $key = $item->getId().'_'.$parameter->getId();
+                    $key = $item->getId() . '_' . $parameter->getId();
                     if (isset($duplicates[$key])) {
-                        $context->buildViolation('A duplicate entry for Parameter "'.$parameter->getParameter().'" was found')->addViolation();
+                        $context->buildViolation('A duplicate entry for Parameter "' . $parameter->getParameter() . '" was found')->addViolation();
                     }
                     $duplicates[$key] = true;
                 }
@@ -103,7 +102,7 @@ class MenuItemType extends AbstractType {
 
                 /** @var RouteParameter $parameter */
                 foreach ($required as $parameter) {
-                    $context->buildViolation('The Required Parameter "'.$parameter->getParameter().'" is missing')->addViolation();
+                    $context->buildViolation('The Required Parameter "' . $parameter->getParameter() . '" is missing')->addViolation();
                 }
             };
 

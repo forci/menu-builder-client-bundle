@@ -19,6 +19,7 @@ use Forci\Bundle\MenuBuilderBundle\Manager\MenuManager;
 
 class OrderManager {
 
+    /** @var MenuManager */
     protected $manager;
 
     public function __construct(MenuManager $manager) {
