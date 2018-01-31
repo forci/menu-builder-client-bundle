@@ -13,9 +13,9 @@
 
 namespace Forci\Bundle\MenuBuilderClient\Manager;
 
-use Forci\Bundle\MenuBuilderBundle\Entity\Menu;
-use Forci\Bundle\MenuBuilderBundle\Entity\MenuItem;
-use Forci\Bundle\MenuBuilderBundle\Manager\MenuManager;
+use Forci\Bundle\MenuBuilder\Entity\Menu;
+use Forci\Bundle\MenuBuilder\Entity\MenuItem;
+use Forci\Bundle\MenuBuilder\Manager\MenuManager;
 
 class OrderManager {
 

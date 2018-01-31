@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Forci\Bundle\MenuBuilderClientBundle\Form\Menu\Item;
+namespace Forci\Bundle\MenuBuilderClient\Form\Menu\Item;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -24,10 +24,10 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
-use Forci\Bundle\MenuBuilderBundle\Entity\MenuItem;
-use Forci\Bundle\MenuBuilderBundle\Entity\MenuItemParameter;
-use Forci\Bundle\MenuBuilderBundle\Entity\RouteParameter;
-use Forci\Bundle\MenuBuilderBundle\Repository\RouteParameterRepository;
+use Forci\Bundle\MenuBuilder\Entity\MenuItem;
+use Forci\Bundle\MenuBuilder\Entity\MenuItemParameter;
+use Forci\Bundle\MenuBuilder\Entity\RouteParameter;
+use Forci\Bundle\MenuBuilder\Repository\RouteParameterRepository;
 
 class MenuItemParameterType extends AbstractType {
 
@@ -94,7 +94,7 @@ class MenuItemParameterType extends AbstractType {
 
             $form
                 ->add('parameter', EntityType::class, [
-                    'class' => 'Forci\Bundle\MenuBuilderBundle\Entity\RouteParameter',
+                    'class' => 'Forci\Bundle\MenuBuilder\Entity\RouteParameter',
                     'disabled' => true,
                     'choice_label' => function (RouteParameter $parameter) {
                         if ($parameter->getRequirement()) {
@@ -332,7 +332,7 @@ class MenuItemParameterType extends AbstractType {
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults([
-            'data_class' => 'Forci\Bundle\MenuBuilderBundle\Entity\MenuItemParameter',
+            'data_class' => 'Forci\Bundle\MenuBuilder\Entity\MenuItemParameter',
             'label' => false
         ])->setRequired([
             'item'

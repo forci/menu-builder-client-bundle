@@ -11,12 +11,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Forci\Bundle\MenuBuilderClientBundle\Controller\Menu;
+namespace Forci\Bundle\MenuBuilderClient\Controller\Menu;
 
-use Forci\Bundle\MenuBuilderBundle\Entity\MenuItem;
-use Forci\Bundle\MenuBuilderClientBundle\Form\Menu\Item\ExternalUrlItemType;
-use Forci\Bundle\MenuBuilderClientBundle\Form\Menu\Item\MenuItemType;
-use Forci\Bundle\MenuBuilderClientBundle\Form\Menu\Item\RouteChoiceType;
+use Forci\Bundle\MenuBuilder\Entity\MenuItem;
+use Forci\Bundle\MenuBuilderClient\Form\Menu\Item\ExternalUrlItemType;
+use Forci\Bundle\MenuBuilderClient\Form\Menu\Item\MenuItemType;
+use Forci\Bundle\MenuBuilderClient\Form\Menu\Item\RouteChoiceType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Forci\Bundle\MenuBuilderClientBundle\Form\Menu\Item;
+namespace Forci\Bundle\MenuBuilderClient\Form\Menu\Item;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -43,6 +43,6 @@ class MenuItemParameterChoiceType extends AbstractType {
     }
 
     public function getBlockPrefix() {
-        return 'wucdbm_menu_builder_menu_item_parameter_choice';
+        return 'forci_menu_builder_menu_item_parameter_choice';
     }
 }

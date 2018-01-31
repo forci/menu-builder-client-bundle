@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Forci\Bundle\MenuBuilderClientBundle\Form\Menu\Item;
+namespace Forci\Bundle\MenuBuilderClient\Form\Menu\Item;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -21,10 +21,10 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Forci\Bundle\MenuBuilderBundle\Entity\MenuItem;
-use Forci\Bundle\MenuBuilderBundle\Entity\MenuItemParameter;
-use Forci\Bundle\MenuBuilderBundle\Entity\RouteParameter;
-use Forci\Bundle\MenuBuilderBundle\Entity\RouteParameterType;
+use Forci\Bundle\MenuBuilder\Entity\MenuItem;
+use Forci\Bundle\MenuBuilder\Entity\MenuItemParameter;
+use Forci\Bundle\MenuBuilder\Entity\RouteParameter;
+use Forci\Bundle\MenuBuilder\Entity\RouteParameterType;
 
 class MenuItemType extends AbstractType {
 
@@ -147,7 +147,7 @@ class MenuItemType extends AbstractType {
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults([
-            'data_class' => 'Forci\Bundle\MenuBuilderBundle\Entity\MenuItem'
+            'data_class' => 'Forci\Bundle\MenuBuilder\Entity\MenuItem'
         ]);
     }
 

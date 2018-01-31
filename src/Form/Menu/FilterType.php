@@ -13,11 +13,11 @@
 
 namespace Forci\Bundle\MenuBuilderClient\Form\Menu;
 
-use Forci\Bundle\MenuBuilderBundle\Filter\Menu\MenuFilter;
+use Forci\Bundle\MenuBuilder\Filter\Menu\MenuFilter;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Forci\Bundle\MenuBuilderBundle\Entity\Route;
-use Forci\Bundle\MenuBuilderBundle\Repository\RouteRepository;
+use Forci\Bundle\MenuBuilder\Entity\Route;
+use Forci\Bundle\MenuBuilder\Repository\RouteRepository;
 use Wucdbm\Bundle\QuickUIBundle\Form\Filter\BaseFilterType;
 use Wucdbm\Bundle\QuickUIBundle\Form\Filter\EntityFilterType;
 use Wucdbm\Bundle\QuickUIBundle\Form\Filter\TextFilterType;

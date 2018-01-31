@@ -11,12 +11,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Forci\Bundle\MenuBuilderClientBundle\Form\Menu\Item;
+namespace Forci\Bundle\MenuBuilderClient\Form\Menu\Item;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Forci\Bundle\MenuBuilderBundle\Entity\MenuItem;
+use Forci\Bundle\MenuBuilder\Entity\MenuItem;
 
 class ExternalUrlItemType extends AbstractType {
 
@@ -33,6 +33,6 @@ class ExternalUrlItemType extends AbstractType {
     }
 
     public function getBlockPrefix() {
-        return 'wucdbm_menu_builder_menu_item_url_type';
+        return 'forci_menu_builder_menu_item_url_type';
     }
 }

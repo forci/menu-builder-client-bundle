@@ -11,14 +11,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Forci\Bundle\MenuBuilderClientBundle\Controller;
+namespace Forci\Bundle\MenuBuilderClient\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Forci\Bundle\MenuBuilderBundle\Filter\Menu\MenuFilter;
-use Forci\Bundle\MenuBuilderBundle\Form\Menu\CreateType;
-use Forci\Bundle\MenuBuilderBundle\Form\Menu\FilterType;
+use Forci\Bundle\MenuBuilder\Filter\Menu\MenuFilter;
+use Forci\Bundle\MenuBuilder\Form\Menu\CreateType;
+use Forci\Bundle\MenuBuilder\Form\Menu\FilterType;
 
 class MenuController extends Controller {
 

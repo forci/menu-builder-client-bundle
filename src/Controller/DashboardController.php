@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Forci\Bundle\MenuBuilderClientBundle\Controller;
+namespace Forci\Bundle\MenuBuilderClient\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
