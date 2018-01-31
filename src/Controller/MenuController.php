@@ -11,15 +11,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Forci\Bundle\MenuBuilderClient\Controller;
+namespace Forci\Bundle\MenuBuilderClientBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Forci\Bundle\MenuBuilderBundle\Entity\Menu;
 use Forci\Bundle\MenuBuilderBundle\Filter\Menu\MenuFilter;
-use Forci\Bundle\MenuBuilderClient\Form\Menu\FilterType;
-use Forci\Bundle\MenuBuilderClient\Form\Menu\CreateType;
+use Forci\Bundle\MenuBuilderBundle\Form\Menu\CreateType;
+use Forci\Bundle\MenuBuilderBundle\Form\Menu\FilterType;
 
 class MenuController extends Controller {
 
@@ -40,7 +39,10 @@ class MenuController extends Controller {
         return $this->render('@ForciMenuBuilderClient/Menu/list/list.html.twig', $data);
     }
 
-    public function refreshListRowAction(Menu $menu) {
+    public function refreshListRowAction($id) {
+        $repo = $this->container->get('forci_menu_builder.repo.menus');
+        $menu = $repo->findOneById($id);
+
         $data = [
             'menu' => $menu
         ];
@@ -57,22 +59,22 @@ class MenuController extends Controller {
             return new Response('Error - Empty value', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $repo = $this->container->get('forci_menu_builder.repo.menus');
-        $menu = $repo->findOneById($id);
+        $manager = $this->container->get('forci_menu_builder.manager.menus');
+        $menu = $manager->findOneById($id);
         $menu->setName($name);
-        $repo->save($menu);
+        $manager->save($menu);
 
         return new Response();
     }
 
     public function createAction(Request $request) {
-        $menu = new Menu();
+        $manager = $this->container->get('forci_menu_builder.manager.menus');
+        $menu = $manager->create();
         $form = $this->createForm(CreateType::class, $menu);
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $manager = $this->container->get('forci_menu_builder.manager.menus');
             $manager->save($menu);
 
             $route = $this->getParameter('forci_menu_builder_client.order_route');
@@ -104,11 +106,18 @@ class MenuController extends Controller {
         return $this->render('@ForciMenuBuilderClient/Menu/create/create.html.twig', $data);
     }
 
-    public function nestableAction($id) {
+    public function nestableAction($id, Request $request) {
         $repo = $this->get('forci_menu_builder.repo.menus');
         $menu = $repo->findOneById($id);
 
         $form = $this->createForm(CreateType::class, $menu);
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $manager = $this->container->get('forci_menu_builder.manager.menus');
+            $manager->save($menu);
+        }
 
         $data = [
             'menu' => $menu,
@@ -118,7 +127,10 @@ class MenuController extends Controller {
         return $this->render('@ForciMenuBuilderClient/Menu/nestable.html.twig', $data);
     }
 
-    public function refreshNestableAction(Menu $menu) {
+    public function refreshNestableAction($id) {
+        $repo = $this->container->get('forci_menu_builder.repo.menus');
+        $menu = $repo->findOneById($id);
+
         $data = [
             'menu' => $menu
         ];
@@ -126,7 +138,10 @@ class MenuController extends Controller {
         return $this->render('@ForciMenuBuilderClient/Menu/nestable/nestable.html.twig', $data);
     }
 
-    public function updateNestableAction(Menu $menu, Request $request) {
+    public function updateNestableAction($id, Request $request) {
+        $repo = $this->container->get('forci_menu_builder.repo.menus');
+        $menu = $repo->findOneById($id);
+
         $order = $request->request->get('order');
 
         if (!is_array($order)) {
@@ -158,11 +173,18 @@ class MenuController extends Controller {
         }
     }
 
-    public function sortableAction($id, $class) {
+    public function sortableAction($id, $class, Request $request) {
         $repo = $this->get('forci_menu_builder.repo.menus');
         $menu = $repo->findOneById($id);
 
         $form = $this->createForm(CreateType::class, $menu);
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $manager = $this->container->get('forci_menu_builder.manager.menus');
+            $manager->save($menu);
+        }
 
         $data = [
             'menu' => $menu,
@@ -185,7 +207,10 @@ class MenuController extends Controller {
         return $this->render('@ForciMenuBuilderClient/Menu/sortable/sortable.html.twig', $data);
     }
 
-    public function updateSortableAction(Menu $menu, Request $request) {
+    public function updateSortableAction($id, Request $request) {
+        $repo = $this->container->get('forci_menu_builder.repo.menus');
+        $menu = $repo->findOneById($id);
+
         $order = $request->request->get('order');
 
         if (!is_array($order)) {
@@ -217,7 +242,10 @@ class MenuController extends Controller {
         }
     }
 
-    public function removeAction(Menu $menu, Request $request) {
+    public function removeAction($id, Request $request) {
+        $repo = $this->container->get('forci_menu_builder.repo.menus');
+        $menu = $repo->findOneById($id);
+
         if ($request->isXmlHttpRequest()) {
             if ($menu->getIsSystem()) {
                 return $this->json([

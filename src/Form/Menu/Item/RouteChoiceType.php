@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Forci\Bundle\MenuBuilderClient\Form\Menu\Item;
+namespace Forci\Bundle\MenuBuilderClientBundle\Form\Menu\Item;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -27,7 +27,7 @@ class RouteChoiceType extends AbstractType {
         $builder
             ->add('route', EntityType::class, [
                 'label' => 'Please select a page for your new link',
-                'class' => Route::class,
+                'class' => 'Forci\Bundle\MenuBuilderBundle\Entity\Route',
                 'query_builder' => function (RouteRepository $repository) {
                     return $repository->getPublicRoutesQueryBuilder();
                 },
@@ -57,7 +57,7 @@ class RouteChoiceType extends AbstractType {
         ]);
     }
 
-    public function getName() {
-        return 'forci_menu_builder_menu_item_route_choice_type';
+    public function getBlockPrefix() {
+        return 'wucdbm_menu_builder_menu_item_route_choice_type';
     }
 }

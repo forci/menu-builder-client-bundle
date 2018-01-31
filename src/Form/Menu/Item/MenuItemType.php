@@ -11,29 +11,34 @@
  * file that was distributed with this source code.
  */
 
-namespace Forci\Bundle\MenuBuilderClient\Form\Menu\Item;
+namespace Forci\Bundle\MenuBuilderClientBundle\Form\Menu\Item;
 
-use Forci\Bundle\MenuBuilderBundle\Entity\MenuItem;
-use Forci\Bundle\MenuBuilderBundle\Entity\MenuItemParameter;
-use Forci\Bundle\MenuBuilderBundle\Entity\RouteParameter;
-use Forci\Bundle\MenuBuilderBundle\Entity\RouteParameterType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Forci\Bundle\MenuBuilderBundle\Entity\MenuItem;
+use Forci\Bundle\MenuBuilderBundle\Entity\MenuItemParameter;
+use Forci\Bundle\MenuBuilderBundle\Entity\RouteParameter;
+use Forci\Bundle\MenuBuilderBundle\Entity\RouteParameterType;
 
 class MenuItemType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder
-            ->add('name', TextType::class, [
-                'label' => 'Display name - this will be displayed as the text of the generated link'
-            ]);
+        $builder->add('name', NameType::class);
+
+        /** @var MenuItem $item */
+        $item = $builder->getData();
+
+        if ($item->getUrl()) {
+            $builder->add('url', UrlType::class);
+
+            return;
+        }
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             /** @var MenuItem $item */
@@ -72,9 +77,9 @@ class MenuItemType extends AbstractType {
                 /** @var MenuItemParameter $menuParameter */
                 foreach ($item->getParameters() as $menuParameter) {
                     $parameter = $menuParameter->getParameter();
-                    $key = $item->getId() . '_' . $parameter->getId();
+                    $key = $item->getId().'_'.$parameter->getId();
                     if (isset($duplicates[$key])) {
-                        $context->buildViolation('A duplicate entry for Parameter "' . $parameter->getParameter() . '" was found')->addViolation();
+                        $context->buildViolation('A duplicate entry for Parameter "'.$parameter->getParameter().'" was found')->addViolation();
                     }
                     $duplicates[$key] = true;
                 }
@@ -102,7 +107,7 @@ class MenuItemType extends AbstractType {
 
                 /** @var RouteParameter $parameter */
                 foreach ($required as $parameter) {
-                    $context->buildViolation('The Required Parameter "' . $parameter->getParameter() . '" is missing')->addViolation();
+                    $context->buildViolation('The Required Parameter "'.$parameter->getParameter().'" is missing')->addViolation();
                 }
             };
 
@@ -110,7 +115,7 @@ class MenuItemType extends AbstractType {
             /** @var MenuItem $item */
             $item = $event->getData();
             $form->add('parameters', CollectionType::class, [
-                'label' => 'URL Parameters',
+                'label' => false,
                 // TODO: Make it possible to add custom parameters with custom names?
 //                'allow_add'    => true,
 //                'allow_delete' => true,
@@ -127,17 +132,6 @@ class MenuItemType extends AbstractType {
                     ])
                 ]
             ]);
-
-//            $route = $item->getRoute();
-//            /** @var RouteParameter $parameter */
-//            foreach ($route->getParameters() as $parameter) {
-//                if ('_locale' == $parameter->getParameter()) {
-//                    $form->add('useCurrentLocale', CheckboxType::class, [
-//                        'label' => 'Use the current locale if available'
-//                    ]);
-//                    break;
-//                }
-//            }
         });
 
         $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
@@ -153,12 +147,8 @@ class MenuItemType extends AbstractType {
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults([
-            'data_class' => MenuItem::class
+            'data_class' => 'Forci\Bundle\MenuBuilderBundle\Entity\MenuItem'
         ]);
-    }
-
-    public function getName() {
-        return 'menu_builder_client_bundle_form_menu_item_menu_item';
     }
 
     public function getBlockPrefix() {

@@ -11,29 +11,28 @@
  * file that was distributed with this source code.
  */
 
-namespace Forci\Bundle\MenuBuilderClient\Form\Menu;
+namespace Forci\Bundle\MenuBuilderClientBundle\Form\Menu\Item;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Forci\Bundle\MenuBuilderBundle\Entity\Menu;
+use Forci\Bundle\MenuBuilderBundle\Entity\MenuItem;
 
-class CreateType extends AbstractType {
+class ExternalUrlItemType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('name', TextType::class, [
-                'label' => 'Menu name',
-                'attr' => [
-                    'placeholder' => 'Menu name'
-                ]
-            ]);
+            ->add('name', NameType::class)
+            ->add('url', UrlType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults([
-            'data_class' => Menu::class
+            'data_class' => MenuItem::class
         ]);
+    }
+
+    public function getBlockPrefix() {
+        return 'wucdbm_menu_builder_menu_item_url_type';
     }
 }

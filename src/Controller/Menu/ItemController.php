@@ -11,25 +11,30 @@
  * file that was distributed with this source code.
  */
 
-namespace Forci\Bundle\MenuBuilderClient\Controller\Menu;
+namespace Forci\Bundle\MenuBuilderClientBundle\Controller\Menu;
 
+use Forci\Bundle\MenuBuilderBundle\Entity\MenuItem;
+use Forci\Bundle\MenuBuilderClientBundle\Form\Menu\Item\ExternalUrlItemType;
+use Forci\Bundle\MenuBuilderClientBundle\Form\Menu\Item\MenuItemType;
+use Forci\Bundle\MenuBuilderClientBundle\Form\Menu\Item\RouteChoiceType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Forci\Bundle\MenuBuilderBundle\Entity\Menu;
-use Forci\Bundle\MenuBuilderBundle\Entity\MenuItem;
-use Forci\Bundle\MenuBuilderClient\Form\Menu\Item\MenuItemType;
-use Forci\Bundle\MenuBuilderClient\Form\Menu\Item\RouteChoiceType;
 
 class ItemController extends Controller {
 
-    public function chooseRouteAction(Menu $menu, $parentId, Request $request) {
-        $item = new MenuItem();
-        $form = $this->createForm(RouteChoiceType::class, $item);
+    public function chooseRouteAction($id, $parentId, Request $request) {
+        $manager = $this->container->get('forci_menu_builder.manager.menus');
+        $menu = $manager->findOneById($id);
+        $item = $manager->createItem();
 
-        $form->handleRequest($request);
+        $activeForm = 'route';
 
-        if ($form->isValid()) {
+        $routeForm = $this->createForm(RouteChoiceType::class, $item);
+
+        $routeForm->handleRequest($request);
+
+        if ($routeForm->isValid()) {
             return $this->redirectToRoute('forci_menu_builder_client_menu_item_add', [
                 'id' => $menu->getId(),
                 'routeId' => $item->getRoute()->getId(),
@@ -37,10 +42,40 @@ class ItemController extends Controller {
             ]);
         }
 
+        $urlForm = $this->createForm(ExternalUrlItemType::class, $item);
+
+        $urlForm->handleRequest($request);
+
+        if ($urlForm->isValid()) {
+            $item->setMenu($menu);
+            $menu->addItem($item);
+
+            if ($parentId) {
+                $menuItemRepository = $this->container->get('forci_menu_builder.repo.menus_items');
+                $parent = $menuItemRepository->findOneById($parentId);
+                $item->setParent($parent);
+                $parent->addChild($item);
+            }
+
+            return $this->editCreateItemSuccess($item, $request);
+        }
+
+        if ($routeForm->isSubmitted()) {
+            $activeForm = 'route';
+        } elseif ($urlForm->isSubmitted()) {
+            $activeForm = 'url';
+        }
+
         $data = [
             'menu' => $menu,
             'parentId' => $parentId,
-            'form' => $form->createView()
+            'routeForm' => $routeForm->createView(),
+            'urlForm' => $urlForm->createView(),
+            'activeForm' => $activeForm,
+            'action' => $this->generateUrl('forci_menu_builder_client_menu_item_choose_route', [
+                'id' => $id,
+                'parentId' => $parentId
+            ])
         ];
 
         if ($request->isXmlHttpRequest()) {
@@ -52,10 +87,13 @@ class ItemController extends Controller {
         return $this->render('@ForciMenuBuilderClient/Menu/Item/route_choice/choose.html.twig', $data);
     }
 
-    public function addItemAction(Menu $menu, $routeId, $parentId, Request $request) {
+    public function addItemAction($id, $routeId, $parentId, Request $request) {
+        $manager = $this->container->get('forci_menu_builder.manager.menus');
+        $item = $manager->createItem();
+        $repo = $this->container->get('forci_menu_builder.repo.menus');
+        $menu = $repo->findOneById($id);
         $routeRepository = $this->container->get('forci_menu_builder.repo.routes');
         $route = $routeRepository->findOneById($routeId);
-        $item = new MenuItem();
         $item->setRoute($route);
         $item->setMenu($menu);
         $menu->addItem($item);
@@ -90,21 +128,7 @@ class ItemController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $repo = $this->container->get('forci_menu_builder.repo.menus_items');
-            $repo->save($item);
-
-            $route = $this->container->getParameter('forci_menu_builder_client.order_route');
-
-            if ($request->isXmlHttpRequest()) {
-                return $this->json([
-                    'mfp' => $this->renderView('@ForciMenuBuilderClient/Menu/Item/create/success_popup.html.twig'),
-                    'refreshMenu' => true
-                ]);
-            }
-
-            return $this->redirectToRoute($route, [
-                'id' => $item->getMenu()->getId()
-            ]);
+            return $this->editCreateItemSuccess($item, $request);
         }
 
         $data = [
@@ -123,6 +147,26 @@ class ItemController extends Controller {
         }
 
         return $this->render('@ForciMenuBuilderClient/Menu/Item/create/create.html.twig', $data);
+    }
+
+    protected function editCreateItemSuccess(MenuItem $item, Request $request) {
+        $repo = $this->container->get('forci_menu_builder.repo.menus_items');
+        $repo->save($item);
+
+        $route = $this->container->getParameter('forci_menu_builder_client.order_route');
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'mfp' => $this->renderView('@ForciMenuBuilderClient/Menu/Item/create/success_popup.html.twig', [
+                    'item' => $item
+                ]),
+                'refreshMenu' => true
+            ]);
+        }
+
+        return $this->redirectToRoute($route, [
+            'id' => $item->getMenu()->getId()
+        ]);
     }
 
     public function updateItemNameAction($id, $itemId, Request $request) {

@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Forci\Bundle\MenuBuilderClient\Form\Menu\Item;
+namespace Forci\Bundle\MenuBuilderClientBundle\Form\Menu\Item;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -332,7 +332,7 @@ class MenuItemParameterType extends AbstractType {
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults([
-            'data_class' => MenuItemParameter::class,
+            'data_class' => 'Forci\Bundle\MenuBuilderBundle\Entity\MenuItemParameter',
             'label' => false
         ])->setRequired([
             'item'
