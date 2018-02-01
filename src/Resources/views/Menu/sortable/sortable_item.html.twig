@@ -1,6 +1,6 @@
 <li data-id="{{ item.id }}">
     <div class="sortable-actions">
-        <a href="javascript:;" class="x-editable-text" data-type="text" data-pk="1"
+        <a href="javascript:" class="x-editable-text" data-type="text" data-pk="1"
            data-url="{{ path('forci_menu_builder_client_menu_item_name_update', {id: menu.id, itemId: item.id}) }}"
            data-placement="top" title="Set Item Name">
             {{ item.name }}
@@ -13,10 +13,10 @@
            rel="tooltip" title="Edit this item">
             <i class="fa fa-edit"></i>
         </a>
-        <a href="{{ item|menuItemPath }}" class="btn btn-link btn-xs pull-right" rel="popover" title="Visit {{ item.name }}" data-content="{{ item.route|routeName }}" target="_blank">
+        <a href="{{ item|menuItemPath }}" class="btn btn-link btn-xs pull-right" rel="popover" title="Visit {{ item.name }}" data-content="{{ item.route ? item.route|routeName : 'External URL' }}" target="_blank">
             <i class="fa fa-anchor"></i>
         </a>
-        <a href="javascript:;" class="remove-button btn btn-link btn-xs pull-right" data-id="{{ menu.id }}" data-item-id="{{ item.id }}" data-name="{{ item.name }}">
+        <a href="javascript:" class="remove-button btn btn-link btn-xs pull-right" data-id="{{ menu.id }}" data-item-id="{{ item.id }}" data-name="{{ item.name }}">
             <i class="fa fa-times"></i>
         </a>
     </div>

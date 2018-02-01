@@ -1,8 +1,12 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
-            <h4 class="no-margin-top">Create a link to <code>{{ route|routeName }}</code></h4>
-            <h4 class="no-margin-top">Pattern <code>{{ route.path }}</code></h4>
+            {% if route %}
+                <h4 class="no-margin-top">Create a link to <code>{{ route|routeName }}</code></h4>
+                <h4 class="no-margin-top">Pattern <code>{{ route.path }}</code></h4>
+            {% else %}
+                <h4 class="no-margin-top">External URL</h4>
+            {% endif %}
             <hr/>
             {% include '@ForciMenuBuilderClient/Menu/Item/create/form.html.twig' %}
         </div>

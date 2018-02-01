@@ -1,10 +1,10 @@
-{% extends '@ForciMenuBuilderClient/Menu/base.html.twig' %}
+{% extends '@WucdbmMenuBuilderClient/Menu/base.html.twig' %}
 
 {% macro itemParent(item) %}
     {% if item.parent %}
         {{ _self.itemParent(item.parent) }}
     {% endif %}
-    <li rel="popover" title="{{ item.name }}" data-content="{{ item.route|routeName }}" data-placement="bottom">
+    <li rel="popover" title="{{ item.name }}" data-content="{{ item.route ? item.route|routeName : 'External URL' }}" data-placement="bottom">
         <code>{{ item.name }}</code>
     </li>
 {% endmacro %}
@@ -13,10 +13,18 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h4 class="no-margin-top">Create a link to <code>{{ route|routeName }}</code></h4>
-            <h4 class="no-margin-top">Pattern <code>{{ route.path }}</code></h4>
+            {% if route %}
+                <h4 class="no-margin-top">Create a link to <code>{{ route|routeName }}</code></h4>
+                <h4 class="no-margin-top">Pattern <code>{{ route.path }}</code></h4>
+            {% else %}
+                <h4 class="no-margin-top">External URL</h4>
+            {% endif %}
             <hr/>
-            {% include '@ForciMenuBuilderClient/Menu/Item/create/form.html.twig' %}
+            {#{% if form.parameters is defined %}#}
+                {% include '@WucdbmMenuBuilderClient/Menu/Item/create/form.html.twig' %}
+            {#{% else %}#}
+                {#{% include '@WucdbmMenuBuilderClient/Menu/Item/route_choice/url_form.html.twig' %}#}
+            {#{% endif %}#}
         </div>
     </div>
 
@@ -24,21 +32,23 @@
 
 {% block scripts %}
 
-    {% for field in form.parameters %}
-        {% if field.value.vars.choices is defined %}
-            $('#{{ field.value.vars.id }}').select2({
-                tags: true,
-                createTag: function(tag) {
-                    return {
-                        id: tag.term,
-                        text: 'New: ' + tag.term
-                    };
-                }
-            });
-        {% endif %}
-    {% endfor %}
+    {% if form.parameters is defined %}
+        {% for field in form.parameters %}
+            {% if field.value.vars.choices is defined %}
+                $('#{{ field.value.vars.id }}').select2({
+                    tags: true,
+                    createTag: function(tag) {
+                        return {
+                            id: tag.term,
+                            text: 'New: ' + tag.term
+                        };
+                    }
+                });
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 
-    {#{% import '@ForciMenuBuilderClient/_shared/collection_macro.html.twig' as macro %}#}
+    {#{% import '@WucdbmMenuBuilder/_shared/collection_macro.html.twig' as macro %}#}
 
     {#{{ macro.collection(form.parameters) }}#}
 
@@ -57,7 +67,9 @@
     {% if item.parent %}
         {{ _self.itemParent(item.parent) }}
     {% endif %}
-    <li>
-        {{ route|routeName }}
-    </li>
+    {% if route %}
+        <li>
+            {{ route|routeName }}
+        </li>
+    {% endif %}
 {% endblock %}
