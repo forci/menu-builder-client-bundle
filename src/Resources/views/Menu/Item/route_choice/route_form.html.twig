@@ -1,0 +1,15 @@
+{% form_theme form '@ForciMenuBuilderClient/_shared/form/form_theme.html.twig' %}
+{{ form_start(form, {action: action}) }}
+{{ form_errors(form) }}
+<div class="form-group">
+    {{ form_label(form.route) }}
+    {# needed because of select2 fixed pixel width #}
+    {{ form_widget(form.route, {attr: {style: 'width: 100%'}}) }}
+</div>
+{{ form_rest(form) }}
+<div class="form-group">
+    <button type="submit" class="btn btn-default">
+        Select Page
+    </button>
+</div>
+{{ form_end(form) }}
