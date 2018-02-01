@@ -1,4 +1,4 @@
-{% extends '@WucdbmMenuBuilderClient/Menu/base.html.twig' %}
+{% extends '@ForciMenuBuilderClient/Menu/base.html.twig' %}
 
 {% macro itemParent(item) %}
     {% if item.parent %}
@@ -21,9 +21,9 @@
             {% endif %}
             <hr/>
             {#{% if form.parameters is defined %}#}
-                {% include '@WucdbmMenuBuilderClient/Menu/Item/create/form.html.twig' %}
+                {% include '@ForciMenuBuilderClient/Menu/Item/create/form.html.twig' %}
             {#{% else %}#}
-                {#{% include '@WucdbmMenuBuilderClient/Menu/Item/route_choice/url_form.html.twig' %}#}
+                {#{% include '@ForciMenuBuilderClient/Menu/Item/route_choice/url_form.html.twig' %}#}
             {#{% endif %}#}
         </div>
     </div>
@@ -48,7 +48,7 @@
         {% endfor %}
     {% endif %}
 
-    {#{% import '@WucdbmMenuBuilder/_shared/collection_macro.html.twig' as macro %}#}
+    {#{% import '@ForciMenuBuilder/_shared/collection_macro.html.twig' as macro %}#}
 
     {#{{ macro.collection(form.parameters) }}#}
 
