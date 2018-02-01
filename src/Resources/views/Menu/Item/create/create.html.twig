@@ -1,8 +1,11 @@
 {% extends '@ForciMenuBuilderClient/Menu/base.html.twig' %}
 
+{% import _self as macro %}
+
 {% macro itemParent(item) %}
+    {% import _self as macro %}
     {% if item.parent %}
-        {{ _self.itemParent(item.parent) }}
+        {{ macro.itemParent(item.parent) }}
     {% endif %}
     <li rel="popover" title="{{ item.name }}" data-content="{{ item.route ? item.route|routeName : 'External URL: ' ~ item.url }}" data-placement="bottom">
         <code>{{ item.name }}</code>
@@ -48,10 +51,6 @@
         {% endfor %}
     {% endif %}
 
-    {#{% import '@ForciMenuBuilder/_shared/collection_macro.html.twig' as macro %}#}
-
-    {#{{ macro.collection(form.parameters) }}#}
-
 {% endblock %}
 
 {% block breadcrumb %}
@@ -65,7 +64,7 @@
         </li>
     {% endif %}
     {% if item.parent %}
-        {{ _self.itemParent(item.parent) }}
+        {{ macro.itemParent(item.parent) }}
     {% endif %}
     {% if route %}
         <li>
