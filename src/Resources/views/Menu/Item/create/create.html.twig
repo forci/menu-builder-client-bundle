@@ -4,7 +4,7 @@
     {% if item.parent %}
         {{ _self.itemParent(item.parent) }}
     {% endif %}
-    <li rel="popover" title="{{ item.name }}" data-content="{{ item.route ? item.route|routeName : 'External URL' }}" data-placement="bottom">
+    <li rel="popover" title="{{ item.name }}" data-content="{{ item.route ? item.route|routeName : 'External URL: ' ~ item.url }}" data-placement="bottom">
         <code>{{ item.name }}</code>
     </li>
 {% endmacro %}

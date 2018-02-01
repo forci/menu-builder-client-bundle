@@ -13,7 +13,7 @@
            rel="tooltip" title="Edit this item">
             <i class="fa fa-edit"></i>
         </a>
-        <a href="{{ item|menuItemPath }}" class="btn btn-link btn-xs pull-right" rel="popover" title="Visit {{ item.name }}" data-content="{{ item.route ? item.route|routeName : 'External URL' }}" target="_blank">
+        <a href="{{ item|menuItemPath }}" class="btn btn-link btn-xs pull-right" rel="popover" title="Visit {{ item.name }}" data-content="{{ item.route ? item.route|routeName : 'External URL: ' ~ item.url }}" target="_blank">
             <i class="fa fa-anchor"></i>
         </a>
         <a href="javascript:" class="remove-button btn btn-link btn-xs pull-right" data-id="{{ menu.id }}" data-item-id="{{ item.id }}" data-name="{{ item.name }}">
