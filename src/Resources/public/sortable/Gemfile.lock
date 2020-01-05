@@ -29,7 +29,7 @@ GEM
     eventmachine (1.0.7)
     execjs (1.4.1)
       multi_json (~> 1.0)
-    ffi (1.9.9)
+    ffi (1.11.3)
     formatador (0.2.5)
     fssm (0.2.10)
     guard (1.8.3)
