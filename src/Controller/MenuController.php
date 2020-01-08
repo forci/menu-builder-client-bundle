@@ -42,6 +42,18 @@ class MenuController extends AbstractController {
     /** @var string */
     private $orderRoute;
 
+    public function __construct(
+        MenuManager $menuManager, OrderManager $orderManager,
+        MenuRepository $menuRepository, MenuItemRepository $menuItemRepository,
+        string $orderRoute
+    ) {
+        $this->menuManager = $menuManager;
+        $this->orderManager = $orderManager;
+        $this->menuRepository = $menuRepository;
+        $this->menuItemRepository = $menuItemRepository;
+        $this->orderRoute = $orderRoute;
+    }
+
     public function listAction(Request $request) {
         $filter = new MenuFilter();
         $pagination = $filter->getPagination()->enable();

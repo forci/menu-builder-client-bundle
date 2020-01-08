@@ -10,12 +10,11 @@
             <tag name="controller.service_arguments"/>
         </instanceof>
 
-        <prototype namespace="Forci\Bundle\MenuBuilderClient\Controller\" resource="../../Controller">
+        <prototype namespace="Forci\Bundle\MenuBuilderClient\Controller\" resource="../../../Controller">
             <bind key="$menuRepository" type="service" id="forci_menu_builder.repo.menus"/>
             <bind key="$menuManager" type="service" id="forci_menu_builder.manager.menus"/>
             <bind key="$orderManager" type="service" id="forci_menu_builder_client.manager.order"/>
             <bind key="$routeRepository" type="service" id="forci_menu_builder.repo.routes"/>
-            <bind key="$routeParameterRepository" type="service" id="forci_menu_builder.repo.routes_parameters"/>
             <bind key="$menuItemRepository" type="service" id="forci_menu_builder.repo.menus_items"/>
             <bind key="$orderRoute">%forci_menu_builder_client.order_route%</bind>
         </prototype>

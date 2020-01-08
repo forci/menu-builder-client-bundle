@@ -43,6 +43,18 @@ class ItemController extends AbstractController {
     /** @var string */
     private $orderRoute;
 
+    public function __construct(
+        MenuManager $menuManager, MenuRepository $menuRepository,
+        MenuItemRepository $menuItemRepository, RouteRepository $routeRepository,
+        string $orderRoute
+    ) {
+        $this->menuManager = $menuManager;
+        $this->menuRepository = $menuRepository;
+        $this->menuItemRepository = $menuItemRepository;
+        $this->routeRepository = $routeRepository;
+        $this->orderRoute = $orderRoute;
+    }
+
     public function chooseRouteAction($id, $parentId, Request $request) {
         $menu = $this->menuManager->findOneById($id);
         $item = $this->menuManager->createItem();
