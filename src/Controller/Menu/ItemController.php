@@ -65,7 +65,7 @@ class ItemController extends AbstractController {
 
         $routeForm->handleRequest($request);
 
-        if ($routeForm->isValid()) {
+        if ($routeForm->isSubmitted() && $routeForm->isValid()) {
             return $this->redirectToRoute('forci_menu_builder_client_menu_item_add', [
                 'id' => $menu->getId(),
                 'routeId' => $item->getRoute()->getId(),
@@ -77,7 +77,7 @@ class ItemController extends AbstractController {
 
         $urlForm->handleRequest($request);
 
-        if ($urlForm->isValid()) {
+        if ($urlForm->isSubmitted() && $urlForm->isValid()) {
             $item->setMenu($menu);
             $menu->addItem($item);
 
@@ -152,7 +152,7 @@ class ItemController extends AbstractController {
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             return $this->editCreateItemSuccess($item, $request);
         }
 

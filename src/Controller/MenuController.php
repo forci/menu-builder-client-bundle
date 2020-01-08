@@ -102,7 +102,7 @@ class MenuController extends AbstractController {
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->menuManager->save($menu);
 
             $url = $this->generateUrl($this->orderRoute, [
@@ -139,7 +139,7 @@ class MenuController extends AbstractController {
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->menuManager->save($menu);
         }
 
@@ -201,7 +201,7 @@ class MenuController extends AbstractController {
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->menuManager->save($menu);
         }
 
