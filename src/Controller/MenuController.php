@@ -13,6 +13,11 @@
 
 namespace Forci\Bundle\MenuBuilderClient\Controller;
 
+use Forci\Bundle\MenuBuilder\Manager\MenuManager;
+use Forci\Bundle\MenuBuilder\Repository\MenuItemRepository;
+use Forci\Bundle\MenuBuilder\Repository\MenuRepository;
+use Forci\Bundle\MenuBuilderClient\Manager\OrderManager;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,15 +25,29 @@ use Forci\Bundle\MenuBuilder\Filter\Menu\MenuFilter;
 use Forci\Bundle\MenuBuilder\Form\Menu\CreateType;
 use Forci\Bundle\MenuBuilder\Form\Menu\FilterType;
 
-class MenuController extends Controller {
+class MenuController extends AbstractController {
+
+    /** @var MenuManager */
+    private $menuManager;
+
+    /** @var OrderManager */
+    private $orderManager;
+
+    /** @var MenuRepository */
+    private $menuRepository;
+
+    /** @var MenuItemRepository */
+    private $menuItemRepository;
+
+    /** @var string */
+    private $orderRoute;
 
     public function listAction(Request $request) {
-        $repo = $this->get('forci_menu_builder.repo.menus');
         $filter = new MenuFilter();
         $pagination = $filter->getPagination()->enable();
         $filterForm = $this->createForm(FilterType::class, $filter);
         $filter->load($request, $filterForm);
-        $menus = $repo->filter($filter);
+        $menus = $this->menuRepository->filter($filter);
         $data = [
             'menus' => $menus,
             'filter' => $filter,
@@ -40,8 +59,7 @@ class MenuController extends Controller {
     }
 
     public function refreshListRowAction($id) {
-        $repo = $this->container->get('forci_menu_builder.repo.menus');
-        $menu = $repo->findOneById($id);
+        $menu = $this->menuRepository->findOneById($id);
 
         $data = [
             'menu' => $menu
@@ -59,27 +77,23 @@ class MenuController extends Controller {
             return new Response('Error - Empty value', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $manager = $this->container->get('forci_menu_builder.manager.menus');
-        $menu = $manager->findOneById($id);
+        $menu = $this->menuManager->findOneById($id);
         $menu->setName($name);
-        $manager->save($menu);
+        $this->menuManager->save($menu);
 
         return new Response();
     }
 
     public function createAction(Request $request) {
-        $manager = $this->container->get('forci_menu_builder.manager.menus');
-        $menu = $manager->create();
+        $menu = $this->menuManager->create();
         $form = $this->createForm(CreateType::class, $menu);
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $manager->save($menu);
+            $this->menuManager->save($menu);
 
-            $route = $this->getParameter('forci_menu_builder_client.order_route');
-
-            $url = $this->generateUrl($route, [
+            $url = $this->generateUrl($this->orderRoute, [
                 'id' => $menu->getId()
             ]);
 
@@ -107,16 +121,14 @@ class MenuController extends Controller {
     }
 
     public function nestableAction($id, Request $request) {
-        $repo = $this->get('forci_menu_builder.repo.menus');
-        $menu = $repo->findOneById($id);
+        $menu = $this->menuRepository->findOneById($id);
 
         $form = $this->createForm(CreateType::class, $menu);
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $manager = $this->container->get('forci_menu_builder.manager.menus');
-            $manager->save($menu);
+            $this->menuManager->save($menu);
         }
 
         $data = [
@@ -128,8 +140,7 @@ class MenuController extends Controller {
     }
 
     public function refreshNestableAction($id) {
-        $repo = $this->container->get('forci_menu_builder.repo.menus');
-        $menu = $repo->findOneById($id);
+        $menu = $this->menuRepository->findOneById($id);
 
         $data = [
             'menu' => $menu
@@ -139,8 +150,7 @@ class MenuController extends Controller {
     }
 
     public function updateNestableAction($id, Request $request) {
-        $repo = $this->container->get('forci_menu_builder.repo.menus');
-        $menu = $repo->findOneById($id);
+        $menu = $this->menuRepository->findOneById($id);
 
         $order = $request->request->get('order');
 
@@ -154,8 +164,7 @@ class MenuController extends Controller {
         }
 
         try {
-            $manager = $this->container->get('forci_menu_builder_client.manager.order');
-            $manager->orderNestable($menu, $order);
+            $this->orderManager->orderNestable($menu, $order);
 
             return $this->json([
                 'witter' => [
@@ -174,16 +183,14 @@ class MenuController extends Controller {
     }
 
     public function sortableAction($id, $class, Request $request) {
-        $repo = $this->get('forci_menu_builder.repo.menus');
-        $menu = $repo->findOneById($id);
+        $menu = $this->menuRepository->findOneById($id);
 
         $form = $this->createForm(CreateType::class, $menu);
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $manager = $this->container->get('forci_menu_builder.manager.menus');
-            $manager->save($menu);
+            $this->menuManager->save($menu);
         }
 
         $data = [
@@ -196,8 +203,7 @@ class MenuController extends Controller {
     }
 
     public function refreshSortableAction($id) {
-        $repo = $this->get('forci_menu_builder.repo.menus');
-        $menu = $repo->findOneById($id);
+        $menu = $this->menuRepository->findOneById($id);
 
         $data = [
             'menu' => $menu,
@@ -208,8 +214,7 @@ class MenuController extends Controller {
     }
 
     public function updateSortableAction($id, Request $request) {
-        $repo = $this->container->get('forci_menu_builder.repo.menus');
-        $menu = $repo->findOneById($id);
+        $menu = $this->menuRepository->findOneById($id);
 
         $order = $request->request->get('order');
 
@@ -223,8 +228,7 @@ class MenuController extends Controller {
         }
 
         try {
-            $manager = $this->container->get('forci_menu_builder_client.manager.order');
-            $manager->orderSortable($menu, $order);
+            $this->orderManager->orderSortable($menu, $order);
 
             return $this->json([
                 'witter' => [
@@ -243,8 +247,7 @@ class MenuController extends Controller {
     }
 
     public function removeAction($id, Request $request) {
-        $repo = $this->container->get('forci_menu_builder.repo.menus');
-        $menu = $repo->findOneById($id);
+        $menu = $this->menuRepository->findOneById($id);
 
         if ($request->isXmlHttpRequest()) {
             if ($menu->getIsSystem()) {
@@ -259,8 +262,7 @@ class MenuController extends Controller {
             $isConfirmed = $request->request->get('is_confirmed');
 
             if ($isConfirmed) {
-                $menuRepository = $this->container->get('forci_menu_builder.repo.menus');
-                $menuRepository->remove($menu);
+                $this->menuRepository->remove($menu);
 
                 return $this->json([
                     'redirect' => $this->generateUrl('forci_menu_builder_client_menu_list')
@@ -286,7 +288,7 @@ class MenuController extends Controller {
     public function removeItemAction(Request $request) {
         $id = $request->request->get('id');
         $itemId = $request->request->get('itemId');
-        $isFull = intval($request->request->get('isFull'));
+        $isFull = (int)$request->request->get('isFull');
 
         if (!$id || !$itemId || !is_numeric($isFull)) {
             if ($request->isXmlHttpRequest()) {
@@ -300,9 +302,7 @@ class MenuController extends Controller {
             }
 
             if ($id) {
-                $route = $this->container->getParameter('forci_menu_builder_client.order_route');
-
-                return $this->redirectToRoute($route, [
+                return $this->redirectToRoute($this->orderRoute, [
                     'id' => $id
                 ]);
             }
@@ -310,8 +310,7 @@ class MenuController extends Controller {
             return $this->redirectToRoute('forci_menu_builder_client_menu_list');
         }
 
-        $menuItemRepository = $this->container->get('forci_menu_builder.repo.menus_items');
-        $item = $menuItemRepository->findOneById($itemId);
+        $item = $this->menuItemRepository->findOneById($itemId);
 
         if (!$item) {
             return $this->json([
@@ -322,7 +321,7 @@ class MenuController extends Controller {
             ]);
         }
 
-        $menuItemRepository->remove($item, $isFull);
+        $this->menuItemRepository->remove($item, $isFull);
 
         if ($request->isXmlHttpRequest()) {
             return $this->json([
@@ -331,9 +330,7 @@ class MenuController extends Controller {
             ]);
         }
 
-        $route = $this->container->getParameter('forci_menu_builder_client.order_route');
-
-        return $this->redirectToRoute($route, [
+        return $this->redirectToRoute($this->orderRoute, [
             'id' => $id
         ]);
     }

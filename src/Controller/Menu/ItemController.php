@@ -14,19 +14,38 @@
 namespace Forci\Bundle\MenuBuilderClient\Controller\Menu;
 
 use Forci\Bundle\MenuBuilder\Entity\MenuItem;
+use Forci\Bundle\MenuBuilder\Manager\MenuManager;
+use Forci\Bundle\MenuBuilder\Repository\MenuItemRepository;
+use Forci\Bundle\MenuBuilder\Repository\MenuRepository;
+use Forci\Bundle\MenuBuilder\Repository\RouteRepository;
 use Forci\Bundle\MenuBuilderClient\Form\Menu\Item\ExternalUrlItemType;
 use Forci\Bundle\MenuBuilderClient\Form\Menu\Item\MenuItemType;
 use Forci\Bundle\MenuBuilderClient\Form\Menu\Item\RouteChoiceType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ItemController extends Controller {
+class ItemController extends AbstractController {
+
+    /** @var MenuManager */
+    private $menuManager;
+
+    /** @var MenuRepository */
+    private $menuRepository;
+
+    /** @var MenuItemRepository */
+    private $menuItemRepository;
+
+    /** @var RouteRepository */
+    private $routeRepository;
+
+    /** @var string */
+    private $orderRoute;
 
     public function chooseRouteAction($id, $parentId, Request $request) {
-        $manager = $this->container->get('forci_menu_builder.manager.menus');
-        $menu = $manager->findOneById($id);
-        $item = $manager->createItem();
+        $menu = $this->menuManager->findOneById($id);
+        $item = $this->menuManager->createItem();
 
         $activeForm = 'route';
 
@@ -51,8 +70,7 @@ class ItemController extends Controller {
             $menu->addItem($item);
 
             if ($parentId) {
-                $menuItemRepository = $this->container->get('forci_menu_builder.repo.menus_items');
-                $parent = $menuItemRepository->findOneById($parentId);
+                $parent = $this->menuItemRepository->findOneById($parentId);
                 $item->setParent($parent);
                 $parent->addChild($item);
             }
@@ -88,19 +106,15 @@ class ItemController extends Controller {
     }
 
     public function addItemAction($id, $routeId, $parentId, Request $request) {
-        $manager = $this->container->get('forci_menu_builder.manager.menus');
-        $item = $manager->createItem();
-        $repo = $this->container->get('forci_menu_builder.repo.menus');
-        $menu = $repo->findOneById($id);
-        $routeRepository = $this->container->get('forci_menu_builder.repo.routes');
-        $route = $routeRepository->findOneById($routeId);
+        $item = $this->menuManager->createItem();
+        $menu = $this->menuRepository->findOneById($id);
+        $route = $this->routeRepository->findOneById($routeId);
         $item->setRoute($route);
         $item->setMenu($menu);
         $menu->addItem($item);
 
         if ($parentId) {
-            $menuItemRepository = $this->container->get('forci_menu_builder.repo.menus_items');
-            $parent = $menuItemRepository->findOneById($parentId);
+            $parent = $this->menuItemRepository->findOneById($parentId);
             $item->setParent($parent);
             $parent->addChild($item);
         }
@@ -113,8 +127,7 @@ class ItemController extends Controller {
     }
 
     public function editItemAction($id, $itemId, Request $request) {
-        $repo = $this->container->get('forci_menu_builder.repo.menus_items');
-        $item = $repo->findOneById($itemId);
+        $item = $this->menuItemRepository->findOneById($itemId);
 
         return $this->editCreateItem($item, $this->generateUrl('forci_menu_builder_client_menu_item_edit', [
             'id' => $id,
@@ -150,10 +163,7 @@ class ItemController extends Controller {
     }
 
     protected function editCreateItemSuccess(MenuItem $item, Request $request) {
-        $repo = $this->container->get('forci_menu_builder.repo.menus_items');
-        $repo->save($item);
-
-        $route = $this->container->getParameter('forci_menu_builder_client.order_route');
+        $this->menuItemRepository->save($item);
 
         if ($request->isXmlHttpRequest()) {
             return $this->json([
@@ -164,7 +174,7 @@ class ItemController extends Controller {
             ]);
         }
 
-        return $this->redirectToRoute($route, [
+        return $this->redirectToRoute($this->orderRoute, [
             'id' => $item->getMenu()->getId()
         ]);
     }
@@ -178,10 +188,9 @@ class ItemController extends Controller {
             return new Response('Error - Empty value', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $repo = $this->container->get('forci_menu_builder.repo.menus_items');
-        $item = $repo->findOneById($itemId);
+        $item = $this->menuItemRepository->findOneById($itemId);
         $item->setName($name);
-        $repo->save($item);
+        $this->menuItemRepository->save($item);
 
         return new Response();
     }

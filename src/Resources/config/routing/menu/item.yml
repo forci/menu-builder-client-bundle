@@ -1,17 +1,21 @@
 forci_menu_builder_client_menu_item_name_update:
     path:        /{itemId}/update/name
-    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu/Item:updateItemName }
+    controller: Forci\Bundle\MenuBuilderClient\Controller\Menu\ItemController:updateItemNameAction
 
 forci_menu_builder_client_menu_item_choose_route:
     path:        /add/choose-route/{parentId}
-    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu/Item:chooseRoute, parentId: null }
+    controller: Forci\Bundle\MenuBuilderClient\Controller\Menu\ItemController:chooseRouteAction
+    defaults:
+        parentId: null
     requirements:
         id: \d+
         parentId: \d+
 
 forci_menu_builder_client_menu_item_add:
     path:        /add/{routeId}/{parentId}
-    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu/Item:addItem, parentId: null }
+    controller: Forci\Bundle\MenuBuilderClient\Controller\Menu\ItemController:addItemAction
+    defaults:
+        parentId: null
     requirements:
         id: \d+
         routeId: \d+
@@ -19,7 +23,7 @@ forci_menu_builder_client_menu_item_add:
 
 forci_menu_builder_client_menu_item_edit:
     path:        /{itemId}/edit
-    defaults:    { _controller: ForciMenuBuilderClientBundle:Menu/Item:editItem }
+    controller: Forci\Bundle\MenuBuilderClient\Controller\Menu\ItemController:editItemAction
     requirements:
         id: \d+
         itemId: \d+
