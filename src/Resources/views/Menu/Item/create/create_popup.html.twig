@@ -12,16 +12,18 @@
         </div>
     </div>
     <script type="text/javascript">
-        {% for field in form.parameters|filter(field => field.value.vars.choices is defined) %}
-            $('#{{ field.value.vars.id }}').select2({
-                tags: true,
-                createTag: function(tag) {
-                    return {
-                        id: tag.term,
-                        text: 'New: ' + tag.term
-                    };
-                }
-            });
-        {% endfor %}
+        {% if form.parameters and form.parameters|length %}
+            {% for field in form.parameters|filter(field => field.value.vars.choices is defined) %}
+                $('#{{ field.value.vars.id }}').select2({
+                    tags: true,
+                    createTag: function(tag) {
+                        return {
+                            id: tag.term,
+                            text: 'New: ' + tag.term
+                        };
+                    }
+                });
+            {% endfor %}
+        {% endif %}
     </script>
 </div>
